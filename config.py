@@ -16,9 +16,7 @@ class DatabaseSession:
     def __init__(self, url: str = DB_CONFIG):
         self.engine = create_async_engine(
             url,
-            echo=False,
-            pool_size=10,
-            max_overflow=-1,
+            echo=True
         )
         self.SessionLocal = sessionmaker(
             bind=self.engine, class_=AsyncSession, expire_on_commit=False
@@ -48,7 +46,7 @@ class DatabaseSession:
         await self.session.close()
 
 
-    async def get_db(self) -> AsyncGenerator[AsyncSession, None]:
+    async def get_db(self) -> AsyncSession:
         async with self as db:
             yield db
 
